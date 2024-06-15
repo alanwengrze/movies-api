@@ -1,10 +1,15 @@
 const knex = require('../database/knex');
+const AppError = require('../utils/AppError');
 
 class MoviesNotesController {
   
   async create(request, response) {
     const { title, description, rating, movies_tags } = request.body;
-    const { user_id } = request.params;
+    const user_id = request.user.id;
+
+    if(rating < 0 || rating > 5){
+      throw new AppError("A nota deve estar entre 0 e 5");
+    }
 
     const [ note_id ] = await knex('movies_notes').insert({
       title,
@@ -39,8 +44,8 @@ class MoviesNotesController {
   }
 
   async index(request, response) {
-    const { user_id, title, rating, description, movies_tags } = request.query;
-
+    const { title, rating, description, movies_tags } = request.query;
+    const user_id = request.user.id;
     let notes
 
     if(movies_tags){
@@ -59,7 +64,12 @@ class MoviesNotesController {
         .whereIn('name', filterMoviesTags)
         .innerJoin("movies_notes", "movies_notes.id", "movies_tags.note_id")
         .orderBy("movies_notes.title")
-    }else{
+    }else if(description){
+      notes = await knex('movies_notes')
+      .where({user_id})
+      .whereLike('description', `%${description}%`)
+      .orderBy('title')
+    }else if(title){
       notes = await knex('movies_notes')
       .where({user_id})
       .whereLike('title', `%${title}%`)

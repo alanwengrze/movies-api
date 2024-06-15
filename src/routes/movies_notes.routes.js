@@ -2,11 +2,15 @@ const { Router } = require('express');
 
 const MoviesNotesController = require('../controller/MoviesNotesController');
 
+const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
+
 const moviesNotesRoutes = Router();
 
 const moviesNotesController = new MoviesNotesController();
 
-moviesNotesRoutes.post('/:user_id', moviesNotesController.create);
+moviesNotesRoutes.use(ensureAuthenticated);
+
+moviesNotesRoutes.post('/', moviesNotesController.create);
 
 moviesNotesRoutes.get('/:id', moviesNotesController.show);
 
