@@ -29,8 +29,15 @@ class UsersController{
     const user_id = request.user.id;
     const user = await knex('users').where("id", user_id).first();
 
+    //validations
     if(!user){
       throw new AppError("Usuário não encontrado")
+    }
+    if(!old_password){
+      throw new AppError("Voce precisa informar a senha para atualizar o perfil.")
+    }
+    if(!name || !email){
+      throw new AppError("Voce precisa informar o nome e o e-mail para atualizar o perfil.")
     }
 
     const userWithSameEmail = await knex('users').where({ email }).first();
