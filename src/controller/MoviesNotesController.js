@@ -1,46 +1,27 @@
 const knex = require('../database/knex');
 const AppError = require('../utils/AppError');
+const NoteRepository = require('../repositories/NoteRepository');
+const NoteCreateService = require('../services/NoteCreateService');
 
 class MoviesNotesController {
-  
   async create(request, response) {
     const { title, description, rating, movies_tags } = request.body;
     const user_id = request.user.id;
 
-    if(rating < 0 || rating > 5){
-      throw new AppError("A nota deve estar entre 0 e 5");
-    }
+    const noteRepository = new NoteRepository();
+    const noteCreateService = new NoteCreateService(noteRepository);
+    const note = await noteCreateService.execute({ title, description, rating, movies_tags, user_id });
 
-    const [ note_id ] = await knex('movies_notes').insert({
-      title,
-      description,
-      rating,
-      user_id
-    });
-
-    const moviesTagsInsert = movies_tags.map(name => {
-      return{
-        note_id,
-        name,
-        user_id
-      }
-    });
-
-    await knex('movies_tags').insert(moviesTagsInsert);
-    response.json();
+    response.status(201).json(note);
   }
 
   async show(request, response) {
     const { id } = request.params;
 
-    const note = await knex('movies_notes').where({ id }).first();
-
-    const tags = await knex('movies_tags').where({ note_id: id }).orderBy('name');
-
-    return response.json({
-      ...note,
-      tags
-    });
+    const noteRepository = new NoteRepository();
+    const note = await noteRepository.findById(id);
+    
+    return response.json(note);
   }
 
   async index(request, response) {
