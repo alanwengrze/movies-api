@@ -8,7 +8,7 @@ class NoteRepository {
       rating,
       user_id
     });
-    
+
     if(movies_tags){
       const moviesTagsInsert = movies_tags.map(name => {
         return{
@@ -17,10 +17,8 @@ class NoteRepository {
           user_id
         }
       });
-  
       await knex('movies_tags').insert(moviesTagsInsert);
     }
-
 
     return {id: note_id}; //retorna o id da nota criada no Insomnia
   }

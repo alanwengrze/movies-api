@@ -16,8 +16,10 @@ class UserCreateService {
     const hashPassword = await hash(password, 8);
     password = hashPassword
 
-    await this.userRepository.create({ name, email, password: hashPassword });
+    const user = await this.userRepository.create({ name, email, password: hashPassword });
 
+    return user;
   }
 }
+
 module.exports = UserCreateService;
