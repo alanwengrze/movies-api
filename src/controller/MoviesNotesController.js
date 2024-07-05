@@ -53,12 +53,6 @@ class MoviesNotesController {
         .innerJoin("movies_notes", "movies_notes.id", "movies_tags.note_id")
         .groupBy('title')
         .orderBy("movies_notes.title")
-    }else if(description){
-      notes = await knex('movies_notes')
-      .where({user_id})
-      .whereLike('description', `%${description}%`)
-      .groupBy('title')
-      .orderBy('title')
     }else if(title){
       notes = await knex('movies_notes')
       .where({user_id})
@@ -67,7 +61,6 @@ class MoviesNotesController {
       .orderBy('title')
     }
 
-  
 
     const userTags = await knex('movies_tags').where({ user_id });
 

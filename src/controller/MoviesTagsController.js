@@ -4,7 +4,9 @@ class MoviesTagsController {
   async index(request, response) {
     const user_id = request.user.id;
 
-    const tags = await knex('movies_tags').where({ user_id }).orderBy('name');
+    const tags = await knex('movies_tags')
+    .where({ user_id })
+    .groupBy('name');
 
     return response.json(tags)
   }
