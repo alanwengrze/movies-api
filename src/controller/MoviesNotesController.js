@@ -57,7 +57,7 @@ class MoviesNotesController {
       notes = await knex('movies_notes')
       .where({user_id})
       .whereLike('title', `%${title}%`)
-      .groupBy('title')
+      .groupBy('movies_notes.id')
       .orderBy('title')
     }
 
