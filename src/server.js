@@ -24,7 +24,7 @@ app.use(cors({
     'https://yourfavoritemovies.netlify.app'
   ],
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Origin"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   
 }));
