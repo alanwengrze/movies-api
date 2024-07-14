@@ -24,9 +24,8 @@ app.use(cors({
     'https://yourfavoritemovies.netlify.app'
   ],
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Origin"],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
 }));
 
 app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER));
